@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💜 Akshuu's Exam Portal — Made by Gaurav</title>
+  <link rel="stylesheet" href="style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800&family=Dancing+Script:wght@600;700&display=swap" rel="stylesheet" />
+</head>
+<body>
+
+  <!-- ❤️ Floating Hearts Background -->
+  <div id="heartsContainer" class="hearts-container"></div>
+
+  <!-- 🎵 Music Toggle — Romantic tune -->
+  <button id="musicToggle" class="music-btn" onclick="toggleMusic()" title="Toggle Music">🎵</button>
+  <audio id="bgMusic" loop>
+    <source src="https://cdn.pixabay.com/audio/2023/10/10/audio_9e7dc45b3c.mp3" type="audio/mpeg" />
+    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_8cb749d577.mp3" type="audio/mpeg" />
+  </audio>
+
+  <!-- 💋 Kiss Overlay Animation -->
+  <div id="kissOverlay" class="kiss-overlay hidden">
+    <div class="kiss-emoji">💋</div>
+  </div>
+
+  <!-- ✨ Loading Screen -->
+  <div id="loadingScreen" class="loading-screen">
+    <div class="loading-content">
+      <div class="loading-heart">❤️</div>
+      <div class="loading-text">Loading your exam portal...</div>
+      <div class="loading-sub">Made with love by Gaurav 💜</div>
+      <div class="loading-bar"><div class="loading-fill"></div></div>
+    </div>
+  </div>
+
+  <!-- ============ LOGIN PAGE ============ -->
+  <div id="loginPage" class="page hidden">
+    <div class="login-container">
+      <div class="login-card glass-card">
+        <div class="login-header">
+          <div class="login-emoji">❤️</div>
+          <h1 class="login-title">Akshuu's Exam Portal</h1>
+          <p class="login-subtitle">Made with love by Gaurav 💋</p>
+        </div>
+
+        <!-- Rotating romantic quotes -->
+        <div class="quote-box">
+          <p id="romanticQuote" class="romantic-quote"></p>
+        </div>
+
+        <form id="loginForm" onsubmit="handleLogin(event)">
+          <div class="input-group">
+            <label>Username</label>
+            <div class="input-wrapper">
+              <span class="input-icon">👤</span>
+              <input type="text" id="username" placeholder="Enter username..." autocomplete="off" required />
+            </div>
+          </div>
+          <div class="input-group">
+            <label>Password</label>
+            <div class="input-wrapper">
+              <span class="input-icon">🔒</span>
+              <input type="password" id="password" placeholder="Enter password..." required />
+              <button type="button" class="toggle-pass" onclick="togglePassword()">👁️</button>
+            </div>
+          </div>
+          <div id="loginError" class="login-error hidden">❌ Wrong credentials, baby! Try again 😏</div>
+          <button type="submit" class="btn-login glow-btn">
+            <span>Login 💜</span>
+          </button>
+        </form>
+
+        <div class="login-footer">
+          <p>❤️ Tum kar logi… mujhe pata hai ❤️</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ INSTRUCTIONS PAGE ============ -->
+  <div id="instructionsPage" class="page hidden">
+    <div class="instructions-container">
+      <div class="instructions-card glass-card">
+        <div class="inst-header">
+          <h1>📋 Exam Instructions</h1>
+          <p class="inst-subtitle">Read carefully, baby 💜</p>
+        </div>
+
+        <div class="inst-grid">
+          <div class="inst-stat">
+            <span class="stat-icon">📝</span>
+            <span class="stat-val">150</span>
+            <span class="stat-label">Total Questions</span>
+          </div>
+          <div class="inst-stat">
+            <span class="stat-icon">⏱️</span>
+            <span class="stat-val">90</span>
+            <span class="stat-label">Minutes</span>
+          </div>
+          <div class="inst-stat">
+            <span class="stat-icon">✅</span>
+            <span class="stat-val">+2</span>
+            <span class="stat-label">Correct</span>
+          </div>
+          <div class="inst-stat">
+            <span class="stat-icon">❌</span>
+            <span class="stat-val">-0.5</span>
+            <span class="stat-label">Wrong</span>
+          </div>
+        </div>
+
+        <div class="inst-rules glass-mini">
+          <h3>📌 Rules</h3>
+          <ul>
+            <li>💜 All 150 questions are compulsory</li>
+            <li>💜 Only one option selectable per question</li>
+            <li>💜 You can change your answer anytime before submit</li>
+            <li>💜 Timer will auto-submit at 00:00</li>
+            <li>💜 Do NOT refresh the page</li>
+            <li>💜 Passing: At least 100 correct answers required</li>
+            <li>💜 Unattempted questions = 0 marks</li>
+          </ul>
+        </div>
+
+        <div class="inst-romantic">
+          <p>🌸 "Cheating mat karna baby 👀"</p>
+          <p>💜 "Tum kar logi mujhe pata hai 💜"</p>
+          <p>😌 "Topper wife material energy 😌"</p>
+          <p>💋 "Question tough ho sakta hai… but meri baby tougher hai 💋"</p>
+        </div>
+
+        <div class="inst-passing glass-mini">
+          <span>🏆 Passing Criteria: Score ≥ 200 marks (100 correct answers)</span>
+        </div>
+
+        <button class="btn-start glow-btn" onclick="startTest()">
+          Start Test 🚀
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ TEST PAGE ============ -->
+  <div id="testPage" class="page hidden">
+    <!-- Top Navbar -->
+    <div class="test-navbar">
+      <div class="nav-brand">💜 Akshuu's Exam</div>
+      <div class="nav-stats">
+        <div class="nav-stat">
+          <span class="ns-label">Attempted</span>
+          <span class="ns-val" id="attemptedCount">0</span>
+        </div>
+        <div class="nav-stat">
+          <span class="ns-label">Remaining</span>
+          <span class="ns-val" id="remainingCount">150</span>
+        </div>
+        <div class="nav-timer" id="timerDisplay">90:00</div>
+      </div>
+      <button class="btn-submit-nav glow-btn" onclick="confirmSubmit()">Submit 💜</button>
+    </div>
+
+    <div class="test-layout">
+      <!-- Left: Question Palette -->
+      <div class="palette-panel glass-card">
+        <div class="palette-header">Question Palette</div>
+        <div class="palette-legend">
+          <span class="legend-item"><span class="leg-dot answered"></span>Answered</span>
+          <span class="legend-item"><span class="leg-dot unanswered"></span>Unanswered</span>
+          <span class="legend-item"><span class="leg-dot current"></span>Current</span>
+        </div>
+        <div class="palette-grid" id="paletteGrid"></div>
+      </div>
+
+      <!-- Right: Question Area -->
+      <div class="question-panel glass-card">
+        <div class="q-header">
+          <span class="q-number" id="qNumber">Question 1 of 150</span>
+        </div>
+        <div class="q-text" id="qText"></div>
+        <div class="q-options" id="qOptions"></div>
+        <div class="q-nav">
+          <button class="btn-prev" onclick="prevQuestion()">← Previous</button>
+          <button class="btn-clear" onclick="clearAnswer()">Clear ✕</button>
+          <button class="btn-next" onclick="nextQuestion()">Next →</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ RESULT PAGE ============ -->
+  <div id="resultPage" class="page hidden">
+    <div class="result-container">
+      <!-- Score Card -->
+      <div class="result-card glass-card" id="resultCard">
+        <div id="resultEmoji" class="result-emoji">🎉</div>
+        <h1 id="resultTitle" class="result-title">Result</h1>
+        <div id="resultStatus" class="result-status"></div>
+
+        <div class="result-grid">
+          <div class="res-stat glass-mini">
+            <span class="rs-icon">📊</span>
+            <span class="rs-val" id="finalScore">0</span>
+            <span class="rs-label">Final Score</span>
+          </div>
+          <div class="res-stat glass-mini">
+            <span class="rs-icon">✅</span>
+            <span class="rs-val" id="correctCount">0</span>
+            <span class="rs-label">Correct</span>
+          </div>
+          <div class="res-stat glass-mini">
+            <span class="rs-icon">❌</span>
+            <span class="rs-val" id="wrongCount">0</span>
+            <span class="rs-label">Wrong</span>
+          </div>
+          <div class="res-stat glass-mini">
+            <span class="rs-icon">⬜</span>
+            <span class="rs-val" id="unattemptedCount">0</span>
+            <span class="rs-label">Unattempted</span>
+          </div>
+          <div class="res-stat glass-mini">
+            <span class="rs-icon">➕</span>
+            <span class="rs-val" id="positiveMarks">0</span>
+            <span class="rs-label">Positive Marks</span>
+          </div>
+          <div class="res-stat glass-mini">
+            <span class="rs-icon">➖</span>
+            <span class="rs-val" id="negativeMarks">0</span>
+            <span class="rs-label">Negative Marks</span>
+          </div>
+        </div>
+
+        <div id="resultMessage" class="result-message"></div>
+        <button class="btn-analysis glow-btn" onclick="scrollToAnalysis()">View Full Analysis 📋</button>
+        <button class="btn-retry glow-btn-outline" onclick="retryTest()">Try Again 🔄</button>
+      </div>
+
+      <!-- Full Analysis -->
+      <div class="analysis-section" id="analysisSection">
+        <h2 class="analysis-title">📋 Full Question Analysis</h2>
+        <div id="analysisContainer"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ ADMIN PAGE ============ -->
+  <div id="adminPage" class="page hidden">
+    <div class="admin-navbar">
+      <div class="admin-brand">⚙️ Admin Dashboard</div>
+      <div class="admin-nav-right">
+        <span class="admin-qcount">Questions: <strong id="adminQuestionCount">0</strong></span>
+        <button class="btn-add-q glow-btn" onclick="openAddModal()">➕ Add Question</button>
+        <button class="btn-logout" onclick="adminLogout()">Logout 🚪</button>
+      </div>
+    </div>
+
+    <div class="admin-body">
+      <!-- Tabs -->
+      <div class="admin-tabs">
+        <button class="admin-tab tab-active" id="tabQuestions" onclick="switchAdminTab('questions')">📝 Questions</button>
+        <button class="admin-tab" id="tabReports" onclick="switchAdminTab('reports')">
+          🚩 Reports
+          <span class="reports-badge" id="reportsBadge" style="display:none;"></span>
+        </button>
+      </div>
+
+      <!-- Questions Panel -->
+      <div id="adminQuestionsPanel">
+        <div class="admin-search-bar">
+          <input type="text" id="adminSearch" placeholder="🔍 Search questions..." />
+          <button class="btn-reset" onclick="resetToDefault()">🔄 Reset to Default</button>
+        </div>
+        <div id="adminQuestionList" class="admin-question-list"></div>
+      </div>
+
+      <!-- Reports Panel -->
+      <div id="adminReportsPanel" class="hidden">
+        <div class="reports-toolbar">
+          <p class="reports-info">Questions reported by student as potentially incorrect. Review and resolve or dismiss each one.</p>
+          <button class="btn-reset" onclick="clearAllReports()">🗑️ Clear All Reports</button>
+        </div>
+        <div id="adminReportsList"></div>
+      </div>
+    </div>
+
+    <!-- Question Modal -->
+    <div id="questionModal" class="modal-overlay">
+      <div class="modal-card glass-card">
+        <h2 id="modalTitle">Add Question</h2>
+        <div class="modal-body">
+          <label>Question</label>
+          <textarea id="modalQuestion" rows="3" placeholder="Enter question..."></textarea>
+          <label>Option A</label>
+          <input type="text" id="modalOpt0" placeholder="Option A" />
+          <label>Option B</label>
+          <input type="text" id="modalOpt1" placeholder="Option B" />
+          <label>Option C</label>
+          <input type="text" id="modalOpt2" placeholder="Option C" />
+          <label>Option D</label>
+          <input type="text" id="modalOpt3" placeholder="Option D" />
+          <label>Correct Answer</label>
+          <select id="modalAnswer">
+            <option value="0">A</option>
+            <option value="1">B</option>
+            <option value="2">C</option>
+            <option value="3">D</option>
+          </select>
+        </div>
+        <div class="modal-actions">
+          <button class="btn-save glow-btn" onclick="saveQuestion()">Save 💜</button>
+          <button class="btn-cancel" onclick="closeModal()">Cancel</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ CELEBRATION OVERLAY ============ -->
+  <div id="celebrationOverlay" class="celebration-overlay hidden">
+    <div class="celebration-content">
+      <div class="celeb-emojis" id="celebEmojis"></div>
+      <div class="celeb-card glass-card">
+        <div class="celeb-main-emoji">❤️</div>
+        <h1>CONGRATULATIONS MY LOVE! 💜</h1>
+        <p>Meri genius girlfriend 😭💋</p>
+        <p>Proud of you baby 🥺</p>
+        <p>Party pending 🎉</p>
+        <p>Virtual kisses unlocked 😌💋</p>
+        <button class="glow-btn" onclick="closeCelebration()">Thank you Gaurav 💜</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ============ FAIL OVERLAY ============ -->
+  <div id="failOverlay" class="fail-overlay hidden">
+    <div class="fail-content glass-card">
+      <div class="fail-tease">
+        <p>😭 Bas reels hi dekhti rehna</p>
+        <p>😏 Aur dekho Instagram</p>
+        <p>😤 Meme scrolling ka result</p>
+      </div>
+      <div class="fail-love">
+        <div class="fail-emoji">💜</div>
+        <h2>It's okay baby 💜</h2>
+        <p>Mujhe pata hai tum kar sakti ho</p>
+        <p>Next attempt mein phod dena 😌</p>
+        <p>My smart girl will comeback stronger 💋</p>
+      </div>
+      <button class="glow-btn" onclick="closeFailOverlay()">I'll try again 💪</button>
+    </div>
+  </div>
+
+  <!-- Toast -->
+  <div id="adminToast" class="admin-toast"></div>
+
+  <!-- Cursor heart -->
+  <div id="cursorHeart" class="cursor-heart">❤️</div>
+
+  <script src="questions.js"></script>
+  <script src="admin.js"></script>
+  <script src="script.js"></script>
+</body>
+</html>
