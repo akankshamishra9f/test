@@ -1,4 +1,4 @@
-﻿const questions = [
+const questions = [
   { question: "Communication channel is shared by all the machines on the network in", options: ["Broadcast network", "Unicast network", "Multicast network", "None of the above"], answer: 0 },
   { question: "A _____ is a device that forwards packets between networks by processing the routing information included in the packet.", options: ["Bridge", "Firewall", "Router", "All of the above"], answer: 2 },
   { question: "Network congestion occurs", options: ["In case of traffic overloading", "When a system terminates", "When connection between two nodes terminates", "None of the above"], answer: 0 },
