@@ -12,12 +12,38 @@
   <!-- ❤️ Floating Hearts Background -->
   <div id="heartsContainer" class="hearts-container"></div>
 
-  <!-- 🎵 Music Toggle — Romantic tune -->
-  <button id="musicToggle" class="music-btn" onclick="toggleMusic()" title="Toggle Music">🎵</button>
-  <audio id="bgMusic" loop>
-    <source src="https://cdn.pixabay.com/audio/2023/10/10/audio_9e7dc45b3c.mp3" type="audio/mpeg" />
-    <source src="https://cdn.pixabay.com/audio/2022/03/15/audio_8cb749d577.mp3" type="audio/mpeg" />
-  </audio>
+  <!-- 🎵 Music Player Button -->
+  <button id="musicToggle" class="music-btn" onclick="toggleMusicPanel()" title="Music Player">🎵</button>
+
+  <!-- 🎵 Music Player Panel -->
+  <div id="musicPanel" class="music-panel hidden">
+    <div class="music-panel-header">
+      <span class="music-panel-title">🎵 Music Player</span>
+      <button class="music-panel-close" onclick="toggleMusicPanel()">✕</button>
+    </div>
+
+    <div class="music-now-playing" id="nowPlayingBar">
+      <div class="music-marquee" id="nowPlayingText">No track playing</div>
+    </div>
+
+    <div class="music-controls">
+      <button class="mc-btn" onclick="prevTrack()" title="Previous">⏮</button>
+      <button class="mc-btn mc-play" id="playPauseBtn" onclick="togglePlayPause()">▶</button>
+      <button class="mc-btn" onclick="nextTrack()" title="Next">⏭</button>
+      <button class="mc-btn" id="loopBtn" onclick="toggleLoop()" title="Loop current">🔁</button>
+      <button class="mc-btn" id="muteBtn" onclick="toggleMute()" title="Mute">🔊</button>
+    </div>
+
+    <div class="music-volume-row">
+      <span>🔈</span>
+      <input type="range" id="volumeSlider" class="volume-slider" min="0" max="100" value="40" oninput="setVolume(this.value)" />
+      <span>🔊</span>
+    </div>
+
+    <div class="music-track-list" id="trackList"></div>
+  </div>
+
+  <audio id="bgMusic" preload="none"></audio>
 
   <!-- 💋 Kiss Overlay Animation -->
   <div id="kissOverlay" class="kiss-overlay hidden">
