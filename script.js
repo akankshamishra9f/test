@@ -36,6 +36,7 @@ window.addEventListener('DOMContentLoaded', () => {
   initCursor();
   initHearts();
   startQuoteRotation();
+  initMusicPlayer();
   triggerKissAnimation(); // 💋 romantic welcome kiss
 
   // Loading screen
@@ -629,22 +630,151 @@ function initCursor() {
 }
 
 // ============================================
-// MUSIC TOGGLE — Romantic tune
+// MUSIC PLAYER — 7 romantic tracks
 // ============================================
-let musicPlaying = false;
-function toggleMusic() {
+const TRACKS = [
+  { name: 'White Petals',          file: 'keys-of-moon-white-petals(chosic.com).mp3' },
+  { name: 'If Only',               file: 'Luke-Bergs-If-Only-chosic.com_.mp3' },
+  { name: 'Radha Krishna Vol.1',   file: 'radha_krishna.mp3' },
+  { name: 'Radha Krishna Vol.2',   file: 'radha_krishna (1).mp3' },
+  { name: 'Radha Krishna Vol.3',   file: 'radha_krishna (2).mp3' },
+  { name: 'Radha Radha',           file: 'radha_radha.mp3' },
+  { name: 'Warm Memories',         file: 'Warm-Memories-Emotional-Inspiring-Piano(chosic.com).mp3' }
+];
+
+let currentTrack  = 0;
+let isPlaying     = false;
+let isLooping     = false;
+let isMuted       = false;
+let musicPanelOpen = false;
+
+function initMusicPlayer() {
+  buildTrackList();
   const audio = document.getElementById('bgMusic');
-  const btn   = document.getElementById('musicToggle');
-  if (musicPlaying) {
+  audio.volume = 0.40;
+
+  // When a track ends — loop it or go to next
+  audio.addEventListener('ended', () => {
+    if (isLooping) {
+      audio.play();
+    } else {
+      currentTrack = (currentTrack + 1) % TRACKS.length;
+      loadAndPlay(currentTrack);
+    }
+  });
+}
+
+function buildTrackList() {
+  const list = document.getElementById('trackList');
+  if (!list) return;
+  list.innerHTML = TRACKS.map((t, i) => `
+    <div class="track-item ${i === currentTrack ? 'track-active' : ''}" id="track-${i}" onclick="selectTrack(${i})">
+      <span class="track-num">${i + 1}</span>
+      <span class="track-name">${t.name}</span>
+      <span class="track-play-icon" id="track-icon-${i}">${i === currentTrack && isPlaying ? '▶' : ''}</span>
+    </div>
+  `).join('');
+}
+
+function selectTrack(index) {
+  currentTrack = index;
+  loadAndPlay(index);
+}
+
+function loadAndPlay(index) {
+  const audio = document.getElementById('bgMusic');
+  audio.src = TRACKS[index].file;
+  audio.loop = false; // handled manually via 'ended' event
+  audio.play().then(() => {
+    isPlaying = true;
+    updatePlayerUI();
+  }).catch(() => {
+    isPlaying = false;
+    updatePlayerUI();
+  });
+}
+
+function togglePlayPause() {
+  const audio = document.getElementById('bgMusic');
+  if (!audio.src || audio.src === window.location.href) {
+    // Nothing loaded yet — load first track
+    loadAndPlay(currentTrack);
+    return;
+  }
+  if (isPlaying) {
     audio.pause();
-    btn.textContent = '🔇';
-    musicPlaying = false;
+    isPlaying = false;
   } else {
-    audio.play().catch(() => {});
-    btn.textContent = '🎵';
-    musicPlaying = true;
+    audio.play().then(() => { isPlaying = true; updatePlayerUI(); });
+    return;
+  }
+  updatePlayerUI();
+}
+
+function prevTrack() {
+  currentTrack = (currentTrack - 1 + TRACKS.length) % TRACKS.length;
+  loadAndPlay(currentTrack);
+}
+
+function nextTrack() {
+  currentTrack = (currentTrack + 1) % TRACKS.length;
+  loadAndPlay(currentTrack);
+}
+
+function toggleLoop() {
+  isLooping = !isLooping;
+  const btn = document.getElementById('loopBtn');
+  if (btn) {
+    btn.textContent = isLooping ? '🔂' : '🔁';
+    btn.classList.toggle('mc-btn-active', isLooping);
+    btn.title = isLooping ? 'Loop ON — click to turn off' : 'Loop current track';
   }
 }
+
+function toggleMute() {
+  const audio = document.getElementById('bgMusic');
+  isMuted = !isMuted;
+  audio.muted = isMuted;
+  const btn = document.getElementById('muteBtn');
+  if (btn) btn.textContent = isMuted ? '🔇' : '🔊';
+}
+
+function setVolume(val) {
+  const audio = document.getElementById('bgMusic');
+  audio.volume = val / 100;
+  if (isMuted && val > 0) {
+    isMuted = false;
+    audio.muted = false;
+    const btn = document.getElementById('muteBtn');
+    if (btn) btn.textContent = '🔊';
+  }
+}
+
+function updatePlayerUI() {
+  // Play/pause button
+  const ppBtn = document.getElementById('playPauseBtn');
+  if (ppBtn) ppBtn.textContent = isPlaying ? '⏸' : '▶';
+
+  // Now playing text
+  const npText = document.getElementById('nowPlayingText');
+  if (npText) npText.textContent = isPlaying ? `♪ ${TRACKS[currentTrack].name}` : 'Paused';
+
+  // Music toggle button emoji
+  const toggleBtn = document.getElementById('musicToggle');
+  if (toggleBtn) toggleBtn.textContent = isPlaying ? '🎶' : '🎵';
+
+  // Track list highlight
+  buildTrackList();
+}
+
+function toggleMusicPanel() {
+  musicPanelOpen = !musicPanelOpen;
+  const panel = document.getElementById('musicPanel');
+  if (panel) panel.classList.toggle('hidden', !musicPanelOpen);
+}
+
+// Legacy stub so nothing breaks
+function toggleMusic() { toggleMusicPanel(); }
 
 // ============================================
 // 💋 KISS ANIMATION — fullscreen fade in/out
